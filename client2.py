@@ -5,9 +5,9 @@ import sys
 import sleekxmpp
 
 # variables
-USER = 'josrodjr'
+USER = 'mencho'
 HOST = '@alumchat.xyz'
-PASSWORD = 'pepapls'
+PASSWORD = 'pepapls2'
 
 # puerto 5222
 # jid es node@server/resource > josrodjr@alumchat.xyz
@@ -20,28 +20,13 @@ class myBot(sleekxmpp.ClientXMPP):
 
         # self.add_event_handler('sign_in', self.signin)
         self.add_event_handler("session_start", self.start)
-
-        self.add_event_handler("register", self.register)
-
         self.add_event_handler('message', self.message)
         self.add_event_handler('message', self.recv_message)
-
 
     def start(self, event):
         self.send_presence()
         self.get_roster()
-# EXPERIMENTAL
-        self.disconnect()
     
-    def register(self, iq):
-        resp = self.Iq()
-        resp['type'] = 'set'
-        print(resp)
-        resp['register']['username'] = self.boundjid.username
-        resp['register']['password'] = self.password
-        resp.send(now=True)
-# EXPERIMENTAL
-        self.disconnect()
 
     def message(self, recipient, msg):
         self.message_info = msg
@@ -64,7 +49,6 @@ class myBot(sleekxmpp.ClientXMPP):
     def dissconect(self):
         self.disconnect(wait=True)
 
-
 if __name__ == '__main__':
     # hardcode the info for testing
 
@@ -72,7 +56,8 @@ if __name__ == '__main__':
 
     if xmpp.connect():
         print("CONNECTED TO SERVER")
-        xmpp.process(block=True)
+        xmpp.message('josrodjr@alumchat.xyz', "REEEEEEEEEEEEEEEEEEEE")
+        xmpp.process()
         # xmpp.disconnect()
     else:
         print("noyeet")
