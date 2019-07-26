@@ -1,8 +1,12 @@
 # Jose Rodolfo Perez 16056
 
 # used libs
+import logging
+
 import sys
 import sleekxmpp
+
+from sleekxmpp.exceptions import IqError, IqTimeout
 
 # variables
 USER = 'josrodjr'
@@ -27,13 +31,33 @@ class myBot(sleekxmpp.ClientXMPP):
         self.add_event_handler('message', self.recv_message)
 
 
-    def start(self, event):
+    def start(self):
+        print("SE INGRESA ACA1")
         self.send_presence()
-        self.get_roster()
+        # self.get_roster()
 # EXPERIMENTAL
-        self.disconnect()
+        # self.disconnect()
+
+        try:
+            self.get_roster()
+        except IqError as err:
+            logging.error('There was an error getting the roster')
+            logging.error(err.iq['error']['condition'])
+            self.disconnect()
+        except IqTimeout:
+            logging.error('Server is taking too long to respond')
+            self.disconnect()
     
-    def register(self, iq):
+    def register(self):
+        # <iq type='get' id='reg1' to='shakespeare.lit'>
+        # <query xmlns='jabber:iq:register'/>
+        # </iq>
+        print("SE INGRESA ACA")
+
+        # resp = sleekxmpp.BaseXMPP.make_iq(self, iquery='jabber:iq:register')
+        # resp = sleekxmpp.BaseXMPP.make_iq_set(self, sub='register')
+
+
         resp = self.Iq()
         resp['type'] = 'set'
         print(resp)
@@ -41,7 +65,7 @@ class myBot(sleekxmpp.ClientXMPP):
         resp['register']['password'] = self.password
         resp.send(now=True)
 # EXPERIMENTAL
-        self.disconnect()
+        # self.disconnect()
 
     def message(self, recipient, msg):
         self.message_info = msg
@@ -56,10 +80,10 @@ class myBot(sleekxmpp.ClientXMPP):
         m.send()
     
     def recv_message(self, msg):
-        # print(message)
+        print(msg)
         # message.reply("The good ol ree").send()
-        if msg['type'] in ('chat', 'normal'):
-            print("%s says: %s" % (msg['from'], msg['body']))
+        # if msg['type'] in ('chat', 'normal'):
+        #     print("%s says: %s" % (msg['from'], msg['body']))
 
     def dissconect(self):
         self.disconnect(wait=True)
@@ -70,8 +94,10 @@ if __name__ == '__main__':
 
     xmpp = myBot(USER+HOST, PASSWORD)
 
-    if xmpp.connect():
+    if xmpp.connect(("alumchat.xyz", 5222)):
         print("CONNECTED TO SERVER")
+        xmpp.start()
+        xmpp.register()
         xmpp.process(block=True)
         # xmpp.disconnect()
     else:

@@ -54,7 +54,7 @@ if __name__ == '__main__':
 
     xmpp = myBot(USER+HOST, PASSWORD)
 
-    if xmpp.connect():
+    if xmpp.connect(("alumchat.xyz", 5222)):
         print("CONNECTED TO SERVER")
         xmpp.message('josrodjr@alumchat.xyz', "REEEEEEEEEEEEEEEEEEEE")
         xmpp.process()
