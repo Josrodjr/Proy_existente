@@ -11,7 +11,7 @@ from sleekxmpp.exceptions import IqError, IqTimeout
 import xml.etree.ElementTree as xml
 
 # variables
-USER = 'josrodjr'
+USER = 'josrodjr5'
 HOST = '@alumchat.xyz'
 PASSWORD = 'pepapls'
 
@@ -29,16 +29,16 @@ class myBot(sleekxmpp.ClientXMPP):
 
         self.add_event_handler("register", self.register)
 
-        self.add_event_handler('message', self.message)
+        # self.add_event_handler('message', self.message)
         self.add_event_handler('message', self.recv_message)
 
 
-    def start(self):
+    def start(self, event):
         print("SENDING PRESENCE")
         # SET RESPONSE TIMER LOW SO WE CAN DEBUG
-        self.response_timeout = 2
+        # self.response_timeout = 2
         self.send_presence()
-        # self.get_roster()
+        self.get_roster()
 # EXPERIMENTAL
         # self.disconnect()
 
@@ -52,57 +52,24 @@ class myBot(sleekxmpp.ClientXMPP):
             logging.error('Server is taking too long to respond')
             self.disconnect()
     
-    def register(self):
-        # <iq type='get' id='reg1' to='shakespeare.lit'>
-        # <query xmlns='jabber:iq:register'/>
-        # </iq>
+    def register(self, iq):
         print("REGISTERING ACCOUNT")
 
-        # resp = sleekxmpp.BaseXMPP.make_iq(self, iquery='jabber:iq:register')
-        # resp = sleekxmpp.BaseXMPP.make_iq_set(self, sub='register')
+        resp = self.Iq()
+        resp['type'] = 'set'
+        resp['register']['username'] = self.boundjid.user
+        resp['register']['password'] = self.password
 
-
-        # resp = self.Iq()
-
-        # make a xml
-        # <iq to='marlowe.shakespeare.lit' type='set'>
-        # <query xmlns='jabber:iq:register'>
-        #     <username>juliet</username>
-        #     <password>R0m30</password>
-        # </query>
-        # </iq>
-        # root = xml.Element("query")
-        username = xml.Element("username")
-        username.text = 'josrodjr'
-        password = xml.Element("password")
-        password.text = 'pepapls'
-        # root.append(username)
-        # root.append(password)
-
-        welp = sleekxmpp.stanza.Iq()        
-        welp.append(username)
-        welp.append(password)
-        # welp.set_query('jabber:iq:register')
-
-        # welp['query']['username'] = username
-        # welp['query']['password'] = password
-
-        welp['type'] = 'set'
-        # welp['xmlns'] = 'jabber:iq:register'
-
-        print(welp)
-
-        # resp.append({'register', {'username': 'josrodjr', 'password': 'pepapls'}})
-        # resp.append("<register <username= 'josrodjr'/> <password='pepapls' /> />")
-
-        # resp['type'] = 'set'
-        # resp['query xmls'] = 'jabber:iq:register'
-        # print(resp)
-        # resp['register']['username'] = self.boundjid.username
-        # resp['register']['password'] = self.password
-
-        # print(resp)
-        welp.send(now=True, timeout=self.response_timeout)
+        try:
+            resp.send(now=True)
+            logging.info("Account created for %s!" % self.boundjid)
+        except IqError as e:
+            logging.error("Could not register account: %s" %
+                    e.iq['error']['text'])
+            self.disconnect()
+        except IqTimeout:
+            logging.error("No response from server.")
+            self.disconnect()
 # EXPERIMENTAL
         # self.disconnect()
 
@@ -129,15 +96,21 @@ class myBot(sleekxmpp.ClientXMPP):
 
 
 if __name__ == '__main__':
-    # hardcode the info for testing
+    # hardcode the info for testing 
 
     xmpp = myBot(USER+HOST, PASSWORD)
 
+    xmpp.register_plugin('xep_0030') # Service Discovery
+    xmpp.register_plugin('xep_0004') # Data forms
+    xmpp.register_plugin('xep_0066') # Out-of-band Data
+    xmpp.register_plugin('xep_0077') # In-band Registration FORCED
+    xmpp.register_plugin('xep_0199') # XMPP Ping
+    xmpp.register_plugin('xep_0045') # Annotations
+
     if xmpp.connect(("alumchat.xyz", 5222)):
         print("CONNECTED TO SERVER")
-        xmpp.start()
-        xmpp.register()
         xmpp.process(block=True)
+        # xmpp.send_message('josrodjr'+HOST, 'yayeet', mtype='chat')
         # xmpp.disconnect()
     else:
         print("noyeet")
