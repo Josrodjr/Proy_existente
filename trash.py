@@ -49,3 +49,19 @@ register(self):
 
         # print(resp)
         # welp.send(now=True, timeout=self.response_timeout)
+
+
+Mandar mensajes 2
+   # m = self.Message()
+        # m['type'] = "chat"
+        # m['from'] = USER+HOST
+        # m['to'] = self.recipient_msg
+        # m['body'] = self.message_info
+        # print("sending: ", m)
+        # m.send()
+
+recibir mensajes 2
+        # print(msg)
+        # message.reply("The good ol ree").send()
+        # if msg['type'] in ('chat', 'normal'):
+        #     print("%s says: %s" % (msg['from'], msg['body']))

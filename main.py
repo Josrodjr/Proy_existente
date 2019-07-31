@@ -11,7 +11,7 @@ from sleekxmpp.exceptions import IqError, IqTimeout
 import xml.etree.ElementTree as xml
 
 # variables
-USER = 'josrodjr5'
+USER = 'josrodjr9'
 HOST = '@alumchat.xyz'
 PASSWORD = 'pepapls'
 
@@ -66,34 +66,58 @@ class myBot(sleekxmpp.ClientXMPP):
         except IqError as e:
             logging.error("Could not register account: %s" %
                     e.iq['error']['text'])
-            self.disconnect()
+            # We don't disconnect if the accound was already registered
+            # self.disconnect()
         except IqTimeout:
             logging.error("No response from server.")
             self.disconnect()
 # EXPERIMENTAL
         # self.disconnect()
 
+    def delete_account(self, iq):
+        print("DELETING ACCOUNT")
+
+        resp = self.Iq()
+        resp['type'] = 'set'
+        resp['from'] = self.boundjid.user
+        resp['register'] = ' '
+        resp['register']['remove'] = ' '
+
+        try:
+            resp.send(now=True)
+            logging.info("Account deleted for %s!" % self.boundjid)
+        except IqError as e:
+            logging.error("Could not be deleted: %s" %
+                    e.iq['error']['text'])
+            # self.disconnect()
+        except IqTimeout:
+            logging.error("No response from server.")
+            self.disconnect()
+    # EXPERIMENTAL
+            # self.disconnect()
+
     def message(self, recipient, msg):
         self.message_info = msg
         self.recipient_msg = recipient
-        # self.send_message(mto=self.recipient_msg, mbody=self.message_info)
-        m = self.Message()
-        m['type'] = "chat"
-        m['from'] = USER+HOST
-        m['to'] = self.recipient_msg
-        m['body'] = self.message_info
-        print("sending: ", m)
-        m.send()
+        self.send_message(mto=self.recipient_msg, mbody=self.message_info)
     
     def recv_message(self, msg):
-        print(msg)
-        # message.reply("The good ol ree").send()
-        # if msg['type'] in ('chat', 'normal'):
-        #     print("%s says: %s" % (msg['from'], msg['body']))
+        print(str(msg['from']) + ": " + str(msg['subject']) + "\n")
+        print(str(msg['body']) + "\n")
 
     def dissconect(self):
         self.disconnect(wait=True)
 
+
+def print_menu():
+    print("1: SEND MESSAGE")
+    print("2: ELMINATE THIS ACCOUNT")
+    print("3: CONTACTS")
+    print("4: REGISTER USER")
+    print("6: JOIN GROUP CHAT")
+    print("7: SET PRESENCE")
+    print("8: DISCONNECT")
+    print("10: SEND GRP MESSAGE")
 
 if __name__ == '__main__':
     # hardcode the info for testing 
@@ -109,8 +133,24 @@ if __name__ == '__main__':
 
     if xmpp.connect(("alumchat.xyz", 5222)):
         print("CONNECTED TO SERVER")
-        xmpp.process(block=True)
+        xmpp.process()
         # xmpp.send_message('josrodjr'+HOST, 'yayeet', mtype='chat')
         # xmpp.disconnect()
     else:
-        print("noyeet")
+        print("COULD NOT CONNECT TO SERVER")
+
+    while (True):
+        # print menu
+        print_menu()
+        print("Insert a number")
+        option = input()
+        try:
+            # convert to int and start the switch  
+            value=int(option)
+            print("SELECTED OPTION: " + option)     
+
+            
+
+
+        except ValueError:
+            print("INVALID TYPE, PLEASE INSERT AN INTEGER")
