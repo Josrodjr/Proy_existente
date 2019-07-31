@@ -118,7 +118,7 @@ def print_menu():
     print("6: SET PRESENCE")
     print("7: DISCONNECT")
     print("8: SEND GRP MESSAGE")
-
+3
 if __name__ == '__main__':
     # hardcoded the info for testing 
 
@@ -179,7 +179,7 @@ if __name__ == '__main__':
                 print("Insert a username to add as friend")
                 friend = input()
                 print("Sending friend request")
-                xmpp.send_presence(pto=friend, ptype='subscribe')
+                xmpp.send_presence(pto=friend+HOST, ptype='subscribe')
             elif value == 5:
                 # join group chat
                 print("Insert a room to join")
@@ -204,9 +204,18 @@ if __name__ == '__main__':
                 # disconnect
                 print("Disconnecting")
                 xmpp.disconnect()
+                break
             elif value == 8:
                 # send grp messsage
-                print("WORKING IN THIS IMPLEMENTATION")
+
+                print("Ingrese el nombre del room: ")
+                group_name = input()
+                print("Inserte texto a enviar: ")
+                texto = input()
+                print("Sending message to group")
+                xmpp.send_message(mto=group_name, mbody=texto, mtype='groupchat')
+
+                # esta malo
             else:
                 print("NOT VALID NUMBER, RETRY")
 
