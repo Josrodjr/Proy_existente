@@ -110,34 +110,18 @@ class myBot(sleekxmpp.ClientXMPP):
 
 
 def print_menu():
+    print("0: CONNECT TO SERVER")
     print("1: SEND MESSAGE")
     print("2: ELMINATE THIS ACCOUNT")
     print("3: CONTACTS")
     print("4: REGISTER USER")
-    print("6: JOIN GROUP CHAT")
-    print("7: SET PRESENCE")
-    print("8: DISCONNECT")
-    print("10: SEND GRP MESSAGE")
+    print("5: JOIN GROUP CHAT")
+    print("6: SET PRESENCE")
+    print("7: DISCONNECT")
+    print("8: SEND GRP MESSAGE")
 
 if __name__ == '__main__':
     # hardcode the info for testing 
-
-    xmpp = myBot(USER+HOST, PASSWORD)
-
-    xmpp.register_plugin('xep_0030') # Service Discovery
-    xmpp.register_plugin('xep_0004') # Data forms
-    xmpp.register_plugin('xep_0066') # Out-of-band Data
-    xmpp.register_plugin('xep_0077') # In-band Registration FORCED
-    xmpp.register_plugin('xep_0199') # XMPP Ping
-    xmpp.register_plugin('xep_0045') # Annotations
-
-    if xmpp.connect(("alumchat.xyz", 5222)):
-        print("CONNECTED TO SERVER")
-        xmpp.process()
-        # xmpp.send_message('josrodjr'+HOST, 'yayeet', mtype='chat')
-        # xmpp.disconnect()
-    else:
-        print("COULD NOT CONNECT TO SERVER")
 
     while (True):
         # print menu
@@ -148,9 +132,57 @@ if __name__ == '__main__':
             # convert to int and start the switch  
             value=int(option)
             print("SELECTED OPTION: " + option)     
-
             
+            if value == 0:
+                # connect and register to server
+                print("Enter a new username: ")
+                USER = input()
+                print("Enter a password: ")
+                PASSWORD = input()
 
+                xmpp = myBot(USER+HOST, PASSWORD)
+
+                xmpp.register_plugin('xep_0030') # Service Discovery
+                xmpp.register_plugin('xep_0004') # Data forms
+                xmpp.register_plugin('xep_0066') # Out-of-band Data
+                xmpp.register_plugin('xep_0077') # In-band Registration FORCED
+                xmpp.register_plugin('xep_0199') # XMPP Ping
+                xmpp.register_plugin('xep_0045') # Annotations
+
+                if xmpp.connect(("alumchat.xyz", 5222)):
+                    print("CONNECTED TO SERVER")
+                    xmpp.process()
+                    # xmpp.send_message('josrodjr'+HOST, 'yayeet', mtype='chat')
+                    # xmpp.disconnect()
+                else:
+                    print("COULD NOT CONNECT TO SERVER")
+
+            elif value == 1:
+                # send a message
+                print("WORKING IN THIS IMPLEMENTATION")
+            elif value == 2:
+                # eliminate this account
+                print("WORKING IN THIS IMPLEMENTATION")
+            elif value == 3:
+                # contacts
+                print("WORKING IN THIS IMPLEMENTATION")
+            elif value == 4:
+                # register user
+                print("WORKING IN THIS IMPLEMENTATION")
+            elif value == 5:
+                # join group chat
+                print("WORKING IN THIS IMPLEMENTATION")
+            elif value == 6:
+                # set presence
+                print("WORKING IN THIS IMPLEMENTATION")
+            elif value == 7:
+                # disconnect
+                print("WORKING IN THIS IMPLEMENTATION")
+            elif value == 8:
+                # send grp messsage
+                print("WORKING IN THIS IMPLEMENTATION")
+            else:
+                print("NOT VALID NUMBER, RETRY")
 
         except ValueError:
             print("INVALID TYPE, PLEASE INSERT AN INTEGER")
