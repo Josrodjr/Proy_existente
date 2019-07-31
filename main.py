@@ -36,7 +36,6 @@ class myBot(sleekxmpp.ClientXMPP):
     def start(self, event):
         print("SENDING PRESENCE")
         # SET RESPONSE TIMER LOW SO WE CAN DEBUG
-        # self.response_timeout = 2
         self.send_presence()
         self.get_roster()
 # EXPERIMENTAL
@@ -121,7 +120,7 @@ def print_menu():
     print("8: SEND GRP MESSAGE")
 
 if __name__ == '__main__':
-    # hardcode the info for testing 
+    # hardcoded the info for testing 
 
     while (True):
         # print menu
@@ -152,8 +151,7 @@ if __name__ == '__main__':
                 if xmpp.connect(("alumchat.xyz", 5222)):
                     print("CONNECTED TO SERVER")
                     xmpp.process()
-                    # xmpp.send_message('josrodjr'+HOST, 'yayeet', mtype='chat')
-                    # xmpp.disconnect()
+                    
                 else:
                     print("COULD NOT CONNECT TO SERVER")
 
