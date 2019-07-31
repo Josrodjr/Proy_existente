@@ -74,7 +74,7 @@ class myBot(sleekxmpp.ClientXMPP):
 # EXPERIMENTAL
         # self.disconnect()
 
-    def delete_account(self, iq):
+    def delete_account(self):
         print("DELETING ACCOUNT")
 
         resp = self.Iq()
@@ -114,7 +114,7 @@ def print_menu():
     print("1: SEND MESSAGE")
     print("2: ELMINATE THIS ACCOUNT")
     print("3: CONTACTS")
-    print("4: REGISTER USER")
+    print("4: REGISTER USER AS FRIEND")
     print("5: JOIN GROUP CHAT")
     print("6: SET PRESENCE")
     print("7: DISCONNECT")
@@ -135,7 +135,7 @@ if __name__ == '__main__':
             
             if value == 0:
                 # connect and register to server
-                print("Enter a new username: ")
+                print("Enter a username: ")
                 USER = input()
                 print("Enter a password: ")
                 PASSWORD = input()
@@ -159,25 +159,53 @@ if __name__ == '__main__':
 
             elif value == 1:
                 # send a message
-                print("WORKING IN THIS IMPLEMENTATION")
+                print("Para quien es el mensaje?: ")
+                recipient = input()
+                print("Texto del mensaje?: ")
+                text = input()
+                print("SENDING MESSAGE")
+                xmpp.send_message(mto=recipient+HOST, mbody = text, mtype = 'chat')
             elif value == 2:
                 # eliminate this account
-                print("WORKING IN THIS IMPLEMENTATION")
+                print("DELETING ACCOUNT")
+                xmpp.delete_account()
+                print("ACCOUNT DELETED")
+                xmpp.disconnect()
             elif value == 3:
                 # contacts
-                print("WORKING IN THIS IMPLEMENTATION")
+                print("SHOWING ALL CONTACTS")
+                contacts = xmpp.client_roster
+                print("Sus contactos son: " + "\n" + str(contacts))
             elif value == 4:
-                # register user
-                print("WORKING IN THIS IMPLEMENTATION")
+                # register user as friend
+                print("Insert a username to add as friend")
+                friend = input()
+                print("Sending friend request")
+                xmpp.send_presence(pto=friend, ptype='subscribe')
             elif value == 5:
                 # join group chat
-                print("WORKING IN THIS IMPLEMENTATION")
+                print("Insert a room to join")
+                room = input()
+                print("Insert your nick")
+                nick = input()
+                print("Joining a chat")
+                xmpp.plugin['xep_0045'].joinMUC(room, nick)
             elif value == 6:
                 # set presence
                 print("WORKING IN THIS IMPLEMENTATION")
+                print("Insert a status")
+                status = input()
+                print("Changing status")
+                xmpp.makePresence(pfrom=USER+HOST, pstatus=status)
+
+
+                # esta malo
+
+
             elif value == 7:
                 # disconnect
-                print("WORKING IN THIS IMPLEMENTATION")
+                print("Disconnecting")
+                xmpp.disconnect()
             elif value == 8:
                 # send grp messsage
                 print("WORKING IN THIS IMPLEMENTATION")
